@@ -1,0 +1,46 @@
+server:
+  port: 8089
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      global-cors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_LAST
+
+
+      routes:
+        - id: users-service
+          uri: http://127.0.0.1:8084
+          predicates:
+            - Path=/api/users/**
+
+        - id: warehouse-service
+          uri: http://127.0.0.1:8072
+          predicates:
+            - Path=/api/warehouse/**
+
+        - id: company-service
+          uri: http://127.0.0.1:8081
+          predicates:
+            - Path=/api/company/**
+
+        - id: attribute-service
+          uri: http://127.0.0.1:8083
+          predicates:
+            - Path=/api/attribute/**
