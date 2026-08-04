@@ -50,8 +50,9 @@ public class WebSocketConfig implements WebSocketHandler {
 
     @Override
     public Mono<Void> handle(WebSocketSession session) {
+        Long connectedUserId;
         try {
-            extractAuthenticatedUserId(session);
+            connectedUserId = extractAuthenticatedUserId(session);
         } catch (Exception exception) {
 
             return session.close(CloseStatus.POLICY_VIOLATION);
@@ -59,7 +60,7 @@ public class WebSocketConfig implements WebSocketHandler {
 
         Mono<Void> incoming = session.receive().then();
 
-        Mono<Void> outgoing = session.send(publisher.messagesFor().map(notification -> {
+        Mono<Void> outgoing = session.send(publisher.messagesFor(connectedUserId).map(notification -> {
             try {
                 return session.textMessage(objectMapper.writeValueAsString(notification));
             } catch (JsonProcessingException exception) {

@@ -6,6 +6,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 public class WebSocketNotificationPublisher {
@@ -23,8 +24,12 @@ public class WebSocketNotificationPublisher {
         }
     }
 
-    public Flux<WebSocketNotification> messagesFor() {
-        return channel.asFlux();
+    public Flux<WebSocketNotification> messagesFor(Long connectedUserId) {
+        return channel.asFlux()
+                .filter(notification -> {
+                    Set<Long> recipients = notification.recipientUserIds();
+                    return recipients != null && recipients.contains(connectedUserId);
+                });
     }
 
 }
