@@ -1,0 +1,41 @@
+name: Deploy gateway Service (Prod)
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: corretto
+          java-version: 17
+
+      - name: Build
+        run: mvn clean package -DskipTests
+
+      - name: Upload users.jar
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: deploy
+          key: ${{ secrets.SSH_DEPLOY_KEY_B64 }}
+          source: "target/company-*.jar"
+          target: "/opt/spring/releases/company"
+
+      - name: Activate + restart
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: deploy
+          key: ${{ secrets.SSH_DEPLOY_KEY_B64 }}
+          script: |
+            JAR=$(ls -t /opt/spring/releases/company/gateway-*.jar | head -n 1)
+            ln -sfn "$JAR" /opt/spring/gateway.jar
+            sudo systemctl restart gatewayProd
