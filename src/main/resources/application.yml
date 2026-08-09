@@ -9,7 +9,7 @@ spring:
       global-cors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: "http://localhost:3000"
+            allowedOrigins: "*"
             allowedMethods:
               - GET
               - POST
@@ -26,22 +26,22 @@ spring:
 
       routes:
         - id: users-service
-          uri: http://127.0.0.1:8084
+          uri: http://kinomino.online/api/users
           predicates:
             - Path=/api/users/**
 
         - id: warehouse-service
-          uri: http://127.0.0.1:8072
+          uri: https://api.kinomino.online/api/warehouse
           predicates:
             - Path=/api/warehouse/**
 
         - id: company-service
-          uri: http://127.0.0.1:8081
+          uri: http://kinomino.online/api/company
           predicates:
             - Path=/api/company/**
 
         - id: attribute-service
-          uri: http://127.0.0.1:8083
+          uri: http://kinomino.online/api/attribute
           predicates:
             - Path=/api/attribute/**
 jwt:
