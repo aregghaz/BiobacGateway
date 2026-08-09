@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/internal/ws")
+@RequestMapping("/api/internal/ws")
 public class InternalWebSocketController {
     private final WebSocketNotificationPublisher publisher;
 
