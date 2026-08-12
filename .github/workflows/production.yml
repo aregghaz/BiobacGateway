@@ -36,7 +36,7 @@ jobs:
           username: deploy
           key: ${{ secrets.SSH_DEPLOY_KEY_B64 }}
           script: |
-            JAR=$(ls -t /opt/spring/releases/gateway/gateway-*.jar | head -n 1)
+            JAR=$(ls -t /opt/spring/releases/gateway/target/gateway-*.jar | head -n 1)
             ln -sfn "$JAR" /opt/spring/gateway.jar
             sudo -n /usr/bin/systemctl restart gatewayProd
             sudo -n /usr/bin/systemctl status gatewayProd --no-pager
