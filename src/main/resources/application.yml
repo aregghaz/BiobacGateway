@@ -25,22 +25,22 @@ spring:
 
       routes:
         - id: users-service
-          uri: http://kinomino.online/api/users
+          uri: https://api.kinomino.online/api/users
           predicates:
             - Path=/api/users/**
 
         - id: warehouse-service
-          uri: https://kinomino.online/api/warehouse
+          uri: https://api.kinomino.online/api/warehouse
           predicates:
             - Path=/api/warehouse/**
 
         - id: company-service
-          uri: http://kinomino.online/api/company
+          uri: https://api.kinomino.online/api/company
           predicates:
             - Path=/api/company/**
 
         - id: attribute-service
-          uri: http://kinomino.online/api/attribute
+          uri: https://api.kinomino.online/api/attribute
           predicates:
             - Path=/api/attribute/**
 jwt:
