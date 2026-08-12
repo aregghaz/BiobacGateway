@@ -1,4 +1,4 @@
-package com.ai.biobacgateway.filter;
+package com.ai.gateway.filter;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

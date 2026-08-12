@@ -1,4 +1,4 @@
-package com.ai.biobacgateway.security;
+package com.ai.gateway.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

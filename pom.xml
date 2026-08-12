@@ -15,10 +15,10 @@
     </parent>
 
     <groupId>com.ai</groupId>
-    <artifactId>BioBacGateway</artifactId>
+    <artifactId>gateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>BioBacGateway</name>
+    <name>gateway</name>
     <description>API Gateway service for BioBac</description>
 
     <properties>
