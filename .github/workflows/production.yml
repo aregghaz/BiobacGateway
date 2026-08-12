@@ -36,6 +36,6 @@ jobs:
           username: deploy
           key: ${{ secrets.SSH_DEPLOY_KEY_B64 }}
           script: |
-            JAR=$(ls -t /opt/spring/releases/company/BioBacGateway-*.jar | head -n 1)
+            JAR=$(ls -t /opt/spring/releases/gateway/BioBacGateway-*.jar | head -n 1)
             ln -sfn "$JAR" /opt/spring/gateway.jar
             sudo systemctl restart gatewayProd
