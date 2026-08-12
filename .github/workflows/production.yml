@@ -20,14 +20,14 @@ jobs:
       - name: Build
         run: mvn clean package -DskipTests
 
-      - name: Upload users.jar
+      - name: Upload gateway.jar
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_IP }}
           username: deploy
           key: ${{ secrets.SSH_DEPLOY_KEY_B64 }}
-          source: "target/company-*.jar"
-          target: "/opt/spring/releases/company"
+          source: "target/gateway-*.jar"
+          target: "/opt/spring/releases/gateway"
 
       - name: Activate + restart
         uses: appleboy/ssh-action@v1.0.3
