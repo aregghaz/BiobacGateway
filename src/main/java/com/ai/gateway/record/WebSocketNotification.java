@@ -1,4 +1,4 @@
-package com.ai.biobacgateway.record;
+package com.ai.gateway.record;
 
 import java.time.Instant;
 import java.util.Map;

@@ -1,7 +1,7 @@
-package com.ai.biobacgateway.controller;
+package com.ai.gateway.controller;
 
-import com.ai.biobacgateway.record.WebSocketNotification;
-import com.ai.biobacgateway.service.WebSocketNotificationPublisher;
+import com.ai.gateway.record.WebSocketNotification;
+import com.ai.gateway.service.WebSocketNotificationPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,7 +1,7 @@
-package com.ai.biobacgateway;
+package com.ai.gateway;
 
-import com.ai.biobacgateway.security.JwtUtil;
-import com.ai.biobacgateway.service.WebSocketNotificationPublisher;
+import com.ai.gateway.security.JwtUtil;
+import com.ai.gateway.service.WebSocketNotificationPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,13 +13,10 @@ import org.springframework.web.reactive.socket.CloseStatus;
 import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.WebSocketSession;
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter;
-import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
-import reactor.core.publisher.Sinks;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import java.time.Instant;
 import java.util.Map;
 @Configuration
 public class WebSocketConfig implements WebSocketHandler {

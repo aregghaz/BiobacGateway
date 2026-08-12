@@ -1,4 +1,4 @@
-package com.ai.biobacgateway;
+package com.ai.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
