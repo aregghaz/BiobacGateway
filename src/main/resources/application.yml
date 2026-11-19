@@ -43,5 +43,10 @@ spring:
           uri: https://kinomino.online/api/attribute
           predicates:
             - Path=/api/attribute/**
+
+        - id: audit-service
+          uri: https://kinomino.online/api/audit
+          predicates:
+            - Path=/api/audit/**
 jwt:
   secret: b10bac_super_secret_key_which_is_long_enough_please_change
