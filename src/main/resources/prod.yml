@@ -1,0 +1,47 @@
+server:
+  port: 8089
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      global-cors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_LAST
+
+
+      routes:
+        - id: users-service
+          uri: https://api.kinomino.online/api/users
+          predicates:
+            - Path=/api/users/**
+
+        - id: warehouse-service
+          uri: https://api.kinomino.online/api/warehouse
+          predicates:
+            - Path=/api/warehouse/**
+
+        - id: company-service
+          uri: https://api.kinomino.online/api/company
+          predicates:
+            - Path=/api/company/**
+
+        - id: attribute-service
+          uri: https://api.kinomino.online/api/attribute
+          predicates:
+            - Path=/api/attribute/**
+jwt:
+  secret: b10bac_super_secret_key_which_is_long_enough_please_change
