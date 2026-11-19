@@ -23,13 +23,14 @@ import java.util.List;
 @Order(Ordered.HIGHEST_PRECEDENCE + 10)
 public class InternalEndpointGuard implements WebFilter {
 
-    static final String INTERNAL_PREFIX = "/api/internal/";
     private static final List<String> PROXY_HEADERS = List.of("X-Forwarded-For", "Forwarded", "X-Real-IP");
     private static final Logger log = LoggerFactory.getLogger(InternalEndpointGuard.class);
 
+    private final PublicPaths publicPaths;
     private final JsonErrorWriter errorWriter;
 
-    public InternalEndpointGuard(JsonErrorWriter errorWriter) {
+    public InternalEndpointGuard(PublicPaths publicPaths, JsonErrorWriter errorWriter) {
+        this.publicPaths = publicPaths;
         this.errorWriter = errorWriter;
     }
 
@@ -37,7 +38,7 @@ public class InternalEndpointGuard implements WebFilter {
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getPath().pathWithinApplication().value();
-        if (!path.startsWith(INTERNAL_PREFIX) || isLocalDirectCall(request)) {
+        if (!publicPaths.isGatewayInternal(path) || isLocalDirectCall(request)) {
             return chain.filter(exchange);
         }
         log.warn("Rejecting internal call to {} from {}", path, request.getRemoteAddress());

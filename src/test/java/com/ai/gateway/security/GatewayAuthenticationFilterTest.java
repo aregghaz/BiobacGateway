@@ -1,5 +1,9 @@
 package com.ai.gateway.security;
 
+import java.net.URI;
+import org.springframework.http.HttpMethod;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.ParameterizedTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -70,6 +74,21 @@ class GatewayAuthenticationFilterTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + TestTokens.valid(42)));
 
         assertThat(run(exchange)).isFalse();
+        assertThat(exchange.getResponse().getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "/api/company/%69nternal/balance/1",
+            "/api/company/internal;x=1/balance/1",
+            "/api/company/INTERNAL/balance/1",
+            "/api/company/x%2Finternal/balance/1"})
+    void hidesInternalServiceApisHoweverThePathIsSpelled(String path) {
+        // URI.create keeps the encoding as sent; post(String) would escape the % again
+        MockServerWebExchange exchange = exchange(MockServerHttpRequest.method(HttpMethod.POST, URI.create(path))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + TestTokens.valid(42)));
+
+        assertThat(run(exchange)).as(path).isFalse();
         assertThat(exchange.getResponse().getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 

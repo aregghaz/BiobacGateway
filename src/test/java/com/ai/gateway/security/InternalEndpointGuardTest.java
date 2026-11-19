@@ -1,5 +1,9 @@
 package com.ai.gateway.security;
 
+import java.net.URI;
+import org.springframework.http.HttpMethod;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.ParameterizedTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -16,7 +20,8 @@ class InternalEndpointGuardTest {
 
     private static final String PUBLISH = "/api/internal/ws/publish";
 
-    private final InternalEndpointGuard guard = new InternalEndpointGuard(new JsonErrorWriter(new ObjectMapper()));
+    private final InternalEndpointGuard guard = new InternalEndpointGuard(new PublicPaths(),
+            new JsonErrorWriter(new ObjectMapper()));
 
     @Test
     void allowsADirectCallFromThisHost() {
@@ -36,6 +41,20 @@ class InternalEndpointGuardTest {
     void rejectsACallProxiedInFromOutside() {
         assertThat(passes(MockServerHttpRequest.post(PUBLISH).remoteAddress(address("127.0.0.1"))
                 .header("X-Forwarded-For", "203.0.113.9"))).isFalse();
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "/api/%69nternal/ws/publish",
+            "/api/internal;x=1/ws/publish",
+            "/api/%49NTERNAL/ws/publish",
+            "/api//internal/ws/publish"})
+    void rejectsEncodedSpellingsFromAnotherHost(String path) {
+        MockServerWebExchange exchange = MockServerWebExchange.from(
+                MockServerHttpRequest.method(HttpMethod.POST, URI.create(path)).remoteAddress(address("203.0.113.9")));
+
+        assertThat(run(exchange)).as(path).isFalse();
+        assertThat(exchange.getResponse().getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
