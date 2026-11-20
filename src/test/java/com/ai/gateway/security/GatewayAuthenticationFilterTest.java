@@ -49,6 +49,15 @@ class GatewayAuthenticationFilterTest {
     }
 
     @Test
+    void rejectsATokenThatIsNotAnAccessToken() {
+        MockServerWebExchange exchange = exchange(MockServerHttpRequest.get("/api/warehouse/unit")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + TestTokens.typedAsRefresh(1)));
+
+        assertThat(run(exchange)).isFalse();
+        assertThat(body(exchange)).contains("\"message\":\"Invalid access token.\"");
+    }
+
+    @Test
     void rejectsATokenSignedWithAnotherKey() {
         MockServerWebExchange exchange = exchange(MockServerHttpRequest.post("/api/company/balance/1")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + TestTokens.signedWithAnotherKey(1)));

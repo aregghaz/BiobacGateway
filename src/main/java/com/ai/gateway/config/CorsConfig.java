@@ -18,8 +18,9 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(allowedOrigins.asList());
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        // X-Requested-With: required by BioBacUser on cookie-based token refresh and logout (CSRF guard)
         config.setAllowedHeaders(List.of(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE, HttpHeaders.ACCEPT,
-                HttpHeaders.ACCEPT_LANGUAGE));
+                HttpHeaders.ACCEPT_LANGUAGE, "X-Requested-With"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
 

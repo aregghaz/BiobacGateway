@@ -28,6 +28,18 @@ final class TestTokens {
         return signed("another-secret-0123456789-abcdefghijklmnop", userId, Instant.now().plusSeconds(600));
     }
 
+    /** Signed with the right key but typed as a refresh token. */
+    static String typedAsRefresh(long userId) {
+        return Jwts.builder()
+                .setSubject("user" + userId)
+                .claim("userId", userId)
+                .claim("typ", "refresh")
+                .setIssuedAt(new Date())
+                .setExpiration(Date.from(Instant.now().plusSeconds(600)))
+                .signWith(Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
     private static String signed(String secret, long userId, Instant expiresAt) {
         return Jwts.builder()
                 .setSubject("user" + userId)

@@ -18,6 +18,9 @@ import java.time.Instant;
 @Component
 public class JwtUtil {
 
+    static final String TOKEN_TYPE_CLAIM = "typ";
+    static final String ACCESS_TOKEN_TYPE = "access";
+
     private final Key key;
 
     public JwtUtil(@Value("${jwt.secret}") String jwtSecret) {
@@ -42,7 +45,10 @@ public class JwtUtil {
             throw new TokenRejectedException(TokenRejectedException.Reason.INVALID);
         }
         Long userId = toUserId(claims.get("userId"));
-        if (userId == null || claims.getExpiration() == null) {
+        // tokens issued before the type claim existed have none and stay valid until they expire
+        Object type = claims.get(TOKEN_TYPE_CLAIM);
+        boolean notAnAccessToken = type != null && !ACCESS_TOKEN_TYPE.equals(type);
+        if (userId == null || claims.getExpiration() == null || notAnAccessToken) {
             throw new TokenRejectedException(TokenRejectedException.Reason.INVALID);
         }
         return new VerifiedToken(userId, claims.getExpiration().toInstant());
